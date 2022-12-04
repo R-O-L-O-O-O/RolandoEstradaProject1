@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "ReimbursementProject"
+		},
+		{
+			"path": "TestsReimbursementProject"
+		},
+		{
+			"path": "ApiUi"
+		},
+		{
+			"path": "BusinessLayer"
+		},
+		{
+			"path": "ModelsLayer"
+		},
+		{
+			"path": "RepoLayer"
+		},
+		{
+			"path": "Diagrams"
+		}
+	],
+	"settings": {}
+}

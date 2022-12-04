@@ -1,11 +1,30 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {}
+    "net7.0": {
+      "ModelsLayer/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "compile": {
+          "bin/placeholder/ModelsLayer.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/ModelsLayer.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "ModelsLayer/1.0.0": {
+      "type": "project",
+      "path": "../ModelsLayer/ModelsLayer.csproj",
+      "msbuildProject": "../ModelsLayer/ModelsLayer.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net7.0": []
+    "net7.0": [
+      "ModelsLayer >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Gamer\\.nuget\\packages\\": {}
@@ -31,7 +50,11 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\ModelsLayer\\ModelsLayer.csproj": {
+              "projectPath": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\ModelsLayer\\ModelsLayer.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
