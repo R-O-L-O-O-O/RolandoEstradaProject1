@@ -6119,11 +6119,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\TestsReimbursementProject\\TestsReimbursementProject.csproj",
-      "projectName": "TestsReimbursementProject",
-      "projectPath": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\TestsReimbursementProject\\TestsReimbursementProject.csproj",
+      "projectUniqueName": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\xUnitTesting\\xUnitTesting.csproj",
+      "projectName": "xUnitTesting",
+      "projectPath": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\xUnitTesting\\xUnitTesting.csproj",
       "packagesPath": "C:\\Users\\Gamer\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\TestsReimbursementProject\\obj\\",
+      "outputPath": "C:\\Users\\Gamer\\Desktop\\Revature\\RolandoEstradaProject1\\xUnitTesting\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Gamer\\AppData\\Roaming\\NuGet\\NuGet.Config"
