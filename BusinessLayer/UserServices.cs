@@ -13,6 +13,10 @@ public interface IUserServices
     public User RegisterUser(string email, string password);
     public User RegisterUser(string email, string password, int roleid);
     public User LoginUser(string email, string password);
+
+    //public User EditUser(int id, string oldPassword, string newPassword);
+    //public User EditUser(int id, string email);
+    // public User EditUser(int managerId, int userId, int roleId);
 }
 
 public class UserServices : IUserServices
@@ -25,7 +29,7 @@ public class UserServices : IUserServices
         this._ivs = new VerificationServices(_iur);
     }
 
-    public User LoginUser(string email, string password) => _iur.LoginUser(email, password);
+    public User LoginUser(string email, string password) => _iur.LoginUser(email, password); //Login Constructor
 
     #region //Registration Methods
     public User RegisterUser(string email, string password)
@@ -40,5 +44,36 @@ public class UserServices : IUserServices
             return null!;
         return _iur.RegisterUser(email, password, roleid );
     }
+    #endregion
+
+    #region//Edit User Methods
+    // public User EditUser(int id, string oldPassword, string newPassword)
+    // {
+    //     if(!_ivs.IsEmployee(id) || !_ivs.VerifyPassword(newPassword) || !_ivs.IsPassword(id, oldPassword))
+    //     {
+    //         Console.WriteLine("Invalid userId, invalid new password, or passwords don't match");
+    //         return null!;
+    //     }
+    //     return _iur.UpdateUser(id, newPassword);
+    // }
+    // public User EditUser(int id, string email)
+    // {
+    //     if(!_ivs.IsEmployee(id) || !_ivs.VerifyEmail(email))
+    //     {
+    //         Console.WriteLine("Invalid userId, or invalid email");
+    //         return null!;
+    //     }
+    //     return _iur.UpdateUser(id, email);
+    // }
+    // public User EditUser(int managerId, int userId, int roleId)
+    // {
+    //     if(!_ivs.IsEmployee(id) || !_ivs.VerifyEmail(email))
+    //     {
+    //         Console.WriteLine("Invalid userId, or invalid email");
+    //         return null!;
+    //     }
+    //     return _iur.UpdateUser(id, email);
+    // }
+
     #endregion
 }

@@ -27,18 +27,16 @@ public class UserRepo : IUserRepo
 {
     public List<User> GetUsers()
     {
-        string AzureConnectionString = new ConfigurationBuilder().AddJsonFile("appsettings.Development.json").Build().GetSection("ConnectionStrings")["Online"]!;
-        List<User> users = new List<User>();
+        string AzureConnectionString = "Server=tcp:rolo-revature.database.windows.net,1433;Initial Catalog=P1_Database;Persist Security Info=False;User ID=Rolo;Password=AzureKey!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        List<User> users = new();
             try
             {
                 using (SqlConnection connection = new(AzureConnectionString))
                 {
-                    String sql = "SELECT name, collation_name FROM sys.databases";
+                    string getUsersQuery = "SELECT * FROM User;";
 
-                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    using (SqlCommand command = new(getUsersQuery, connection))
                     {
-                        //command.Parameters.AddWithValue("@newUserName", newUserName);
-
                         connection.Open();
                         using (SqlDataReader reader = command.ExecuteReader())
                         {
@@ -70,13 +68,13 @@ public class UserRepo : IUserRepo
     public void RegisterUsers(List<User> userDb)
     {
         string serializedDb = JsonSerializer.Serialize(userDb);
-        File.WriteAllText("UserDatabase.json", serializedDb);
+        File.WriteAllText("appsettings.Development.json", serializedDb);
     }
 
     #region//Put Methods: update role, email, or password
     public User UpdateUser(int id, int roleId)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string updateUserQuery = "UPDATE User SET RoleId = @RoleId WHERE UserId = @Id;";
@@ -104,7 +102,7 @@ public class UserRepo : IUserRepo
 
     public User UpdateUser(int id, string info)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         string regex = @"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$";
         using(SqlConnection connection = new(AzureConnectionString))
         {
@@ -143,7 +141,7 @@ public class UserRepo : IUserRepo
     //Employee 
     public User RegisterUser(string email, string password)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string insertUserQuery = "INSERT INTO User (Email, Password, RoleId) VALUES (@email, @password, @roleId);";
@@ -172,7 +170,7 @@ public class UserRepo : IUserRepo
     //Manager
     public User RegisterUser(string email, string password, int roleid)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string insertUserQuery = "INSERT INTO User (Email, Password, RoleId) VALUES (@email, @password, @roleId);";
@@ -203,7 +201,7 @@ public class UserRepo : IUserRepo
     #region//Get Methods: retrieve unique user by email, id, password
     public User GetUser(string email)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string queryUserByEmail = "SELECT * FROM User WHERE Email = @email";
@@ -238,7 +236,7 @@ public class UserRepo : IUserRepo
 
     public User GetUser(int id)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string queryUserById = "SELECT * FROM User WHERE UserId = @id";
@@ -272,7 +270,7 @@ public class UserRepo : IUserRepo
     }
     public User LoginUser(string email, string password)
     {
-        string AzureConnectionString = File.ReadAllText("../../ConString.txt");
+        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string queryUserByEmail = "SELECT * FROM User WHERE Email = @email AND Password = @password";

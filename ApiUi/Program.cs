@@ -1,6 +1,7 @@
+using BusinessLayer;
+using RepoLayer;
 
-
-        var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
 
@@ -8,6 +9,8 @@
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<IUserServices, UserServices>();
+        builder.Services.AddScoped<IUserRepo, UserRepo>();
 
         var app = builder.Build();
 
