@@ -12,6 +12,7 @@ public interface IUserServices
 {
     public User RegisterUser(string email, string password);
     public User RegisterUser(string email, string password, int roleid);
+    public User LoginUser(string email, string password);
 }
 
 public class UserServices : IUserServices
@@ -24,6 +25,7 @@ public class UserServices : IUserServices
         this._ivs = new VerificationServices(_iur);
     }
 
+    public User LoginUser(string email, string password) => _iur.LoginUser(email, password);
 
     #region //Registration Methods
     public User RegisterUser(string email, string password)
@@ -32,7 +34,6 @@ public class UserServices : IUserServices
             return null!;
         return _iur.RegisterUser(email, password);
     }
-    
     public User RegisterUser(string email, string password, int roleid)
     {
         if(!_ivs.VerifyRegistration(email, password, roleid))

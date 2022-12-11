@@ -16,9 +16,8 @@ public interface IVerificationServices
     public bool VerifyRole(int roleid);
     public bool VerifyRegistration(string email, string password);
     public bool VerifyRegistration(string email, string password, int roleid);
-    //Jason wants to implement a function that deals with a already existing email
-    //public bool isEmployee(int id);
-    //public bool isManager(int id);
+    public bool isEmployee(int id);
+    public bool isManager(int id);
     //public bool isPassword(int id, string oldPassword);
 }
 
@@ -32,14 +31,34 @@ public class VerificationServices : IVerificationServices
     public bool VerifyRegistration(string email, string password, int roleid)
     => VerifyEmail(email) && VerifyPassword(password) && VerifyRole(roleid);
 
-    //Continue creating public bool methods below
+
     public bool VerifyEmail(string email)
     {
         string regex = @"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$";
         return Regex.Match(email, regex).Success;
     }
     public bool VerifyPassword(string password) => Regex.Match(password, @"^([0-9a-zA-Z]{6,})$").Success;
-    public bool VerifyRole(int roleid) => (roleid >= 0 && roleid <= 1);
 
+
+    public bool VerifyRole(int roleId) => (roleId >= 0 && roleId <= 1);
+    public bool isEmployee(int id)
+    {
+        if(_iur.GetUser(id) is null) return false;
+        else return true;
+    }
+
+    public bool isManager(int id)
+    {
+        User tmp = _iur.GetUser(id);
+        if(tmp is null || tmp.RoleId == 0) return false;
+        else return true;
+    }
+
+    // public bool isPassword(int id, string oldPassword)
+    // {
+    //     User tmp = _iur.GetUser(id);
+    //     if(!((tmp.password).Equals(oldPassword))) return false;
+    //     else return true;
+    // }
 
 }
