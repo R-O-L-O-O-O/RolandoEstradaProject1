@@ -7,16 +7,37 @@ using RepoLayer;
 
 namespace BusinessLayer;
 
-//Interace to implement dependency injection into ApiUi
+//Interface to implement dependency injection into ApiUi
 public interface IUserServices
 {
-    public User RegisterUser(string email, string password, int roleId);
+    public User RegisterUser(string email, string password);
+    public User RegisterUser(string email, string password, int roleid);
 }
 
 public class UserServices : IUserServices
 {
-    public User RegisterUser(string email, string password, int roleId)
+    private readonly IUserRepo _iur;
+    private readonly IVerificationServices _ivs;
+    public UserServices(IUserRepo iur)
     {
-        return null!;
+        this._iur = iur;
+        this._ivs = new VerificationServices(_iur);
     }
+
+
+    #region //Registration Methods
+    public User RegisterUser(string email, string password)
+    {
+        if(!_ivs.VerifyRegistration(email, password))
+            return null!;
+        return _iur.RegisterUser(email, password);
+    }
+    
+    public User RegisterUser(string email, string password, int roleid)
+    {
+        if(!_ivs.VerifyRegistration(email, password, roleid))
+            return null!;
+        return _iur.RegisterUser(email, password, roleid );
+    }
+    #endregion
 }

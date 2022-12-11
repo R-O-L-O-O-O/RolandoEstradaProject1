@@ -1,5 +1,5 @@
 //This file implements the functionality from the bus layer
-//And sending requesting to the API
+//And sending requests to the API
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,12 +15,24 @@ namespace ApiUi.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserServices _ius;
-    public AuthController(IUserServices ius) => this._ius = ius;
+    //private readonly ITicketService _its;
+    public AuthController(IUserServices ius)
+    {
+        this._ius = ius;
+        //this._its = its;
+    }
 
     [HttpPost("Register")]
-    public ActionResult<User> RegisterUser(string email, string password, int roleId)
+    public ActionResult<User> RegisterUser(string email, string password)
     {
-        User user = _ius.RegisterUser(email, password, roleId);
-        return Created("You just registered!", user);
+        User user = _ius.RegisterUser(email, password);
+        return Created("path/to/db", user);
+    }
+
+    [HttpPost("RegisterManager")]
+    public ActionResult<User> RegisterUser(string email, string password, int roleid)
+    {
+        User user = _ius.RegisterUser(email, password, roleid);
+        return Created("path/to/db", user);
     }
 }
