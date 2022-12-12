@@ -15,11 +15,11 @@ namespace ApiUi.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IUserServices _ius;
-    //private readonly ITicketService _its;
-    public AuthController(IUserServices ius)
+    private readonly ITicketService _its;
+    public AuthController(IUserServices ius, ITicketService its)
     {
         this._ius = ius;
-        //this._its = its;
+        this._its = its;
     }
 
     [HttpPost("Register")]
@@ -55,5 +55,24 @@ public class AuthController : ControllerBase
     {
         User user = _ius.EditUser(targetId, newEmail);
         return Created("path/", user);
+    }
+
+    [HttpPut("Change Role")]
+    public ActionResult<User> EditUser(int managerId, int targetId, int newRoleId)
+    {
+        User user = _ius.EditUser(managerId, targetId, newRoleId);
+        return Created("path/", user);
+    }
+
+    [HttpGet("Tickets")]
+    public ActionResult<List<Ticket>> UserTickets(int userId) {
+        List<Ticket> userTickets = _its.GetUserTickets(userId);
+        return Created("path/", userTickets);
+    }
+
+    [HttpGet("Ticket Status")]
+    public ActionResult<List<Ticket>> UserTickets(int userId, int status) {
+        List<Ticket> userTickets = _its.GetUserTickets(userId, status);
+        return Created("path/", userTickets);
     }
 }
