@@ -53,7 +53,7 @@ public class VerificationServices : IVerificationServices
     public bool IsPassword(int id, string oldPassword)
     {
         User tmp = _iur.GetUser(id);
-        if(!((tmp.Password).Equals(oldPassword))) return false;
+        if(!((tmp.Password!).Equals(oldPassword))) return false;
         else return true;
     }
 }

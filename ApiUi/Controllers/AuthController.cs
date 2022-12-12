@@ -43,10 +43,17 @@ public class AuthController : ControllerBase
         return Created("path/to/db", user);
     }
 
-    // [HttpPut("Change Email")]
-    // public ActionResult<User> EditUser(int targetId, string newEmail)
-    // {
-    //     User user = _ius.EditUser(targetId, newEmail);
-    //     return Created("path/", user);
-    // }
+    [HttpPut("Change Password")]
+    public ActionResult<User> EditUser(int targetId, string oldPassword, string newPassword)
+    {
+        User user = _ius.EditUser(targetId, oldPassword, newPassword);
+        return Created("path/", user);
+    }
+
+    [HttpPut("Change Email")]
+    public ActionResult<User> EditUser(int targetId, string newEmail)
+    {
+        User user = _ius.EditUser(targetId, newEmail);
+        return Created("path/", user);
+    }
 }

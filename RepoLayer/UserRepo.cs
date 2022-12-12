@@ -25,15 +25,15 @@ public interface IUserRepo
 
 public class UserRepo : IUserRepo
 {
+    const string AzureConnectionString = "Server=tcp:rolo-revature.database.windows.net,1433;Initial Catalog=P1_Database;Persist Security Info=False;User ID=Rolo;Password=AzureKey!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
     public List<User> GetUsers()
     {
-        string AzureConnectionString = "Server=tcp:rolo-revature.database.windows.net,1433;Initial Catalog=P1_Database;Persist Security Info=False;User ID=Rolo;Password=AzureKey!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         List<User> users = new();
             try
             {
                 using (SqlConnection connection = new(AzureConnectionString))
                 {
-                    string getUsersQuery = "SELECT * FROM User;";
+                    string getUsersQuery = "SELECT * FROM [dbo].[User]";
 
                     using (SqlCommand command = new(getUsersQuery, connection))
                     {
@@ -53,16 +53,7 @@ public class UserRepo : IUserRepo
                 Console.WriteLine(e.ToString());
             }
             Console.ReadLine();
-
         return users;
-        // if (File.Exists("UserDatabase.json"))
-        // {
-        //     return JsonSerializer.Deserialize<List<User>>(File.ReadAllText("UserDatabase.json"))!;
-        // }
-        // else
-        // {
-        //     return new List<User>();
-        // }
     }
 
     public void RegisterUsers(List<User> userDb)
@@ -74,10 +65,9 @@ public class UserRepo : IUserRepo
     #region//Put Methods: update role, email, or password
     public User UpdateUser(int id, int roleId)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
-            string updateUserQuery = "UPDATE User SET RoleId = @RoleId WHERE UserId = @Id;";
+            string updateUserQuery = "UPDATE [dbo].[User] SET RoleId = @RoleId WHERE Id = @Id";
             SqlCommand command = new(updateUserQuery, connection);
             command.Parameters.AddWithValue("@RoleId", roleId);
             command.Parameters.AddWithValue("@Id", id);
@@ -102,17 +92,16 @@ public class UserRepo : IUserRepo
 
     public User UpdateUser(int id, string info)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         string regex = @"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$";
         using(SqlConnection connection = new(AzureConnectionString))
         {
             string updateUserQuery;
             if(System.Text.RegularExpressions.Regex.Match(info, regex).Success) {
                 // info is an email
-                updateUserQuery = "UPDATE User SET Email = @info WHERE UserId = @Id";
+                updateUserQuery = "UPDATE [dbo].[User] SET Email = @info WHERE Id = @Id";
             } else {
                 // info is a password
-                updateUserQuery = "UPDATE User SET Password = @info WHERE UserId = @Id";
+                updateUserQuery = "UPDATE [dbo].[User] SET Password = @info WHERE Id = @Id";
             }
             SqlCommand command = new SqlCommand(updateUserQuery, connection);
             command.Parameters.AddWithValue("@info", info);
@@ -141,10 +130,9 @@ public class UserRepo : IUserRepo
     //Employee 
     public User RegisterUser(string email, string password)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
-            string insertUserQuery = "INSERT INTO User (Email, Password, RoleId) VALUES (@email, @password, @roleId);";
+            string insertUserQuery = "INSERT INTO [dbo].[User] (Email, Password, RoleId) VALUES (@email, @password, @roleId)";
             SqlCommand command = new(insertUserQuery, connection);
                 command.Parameters.AddWithValue("@email", email);
                 command.Parameters.AddWithValue("@password", password);
@@ -170,10 +158,9 @@ public class UserRepo : IUserRepo
     //Manager
     public User RegisterUser(string email, string password, int roleid)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
         using(SqlConnection connection = new(AzureConnectionString))
         {
-            string insertUserQuery = "INSERT INTO User (Email, Password, RoleId) VALUES (@email, @password, @roleId);";
+            string insertUserQuery = "INSERT INTO [dbo].[User] (Email, Password, RoleId) VALUES (@email, @password, @roleId)";
             SqlCommand command = new(insertUserQuery, connection);
                 command.Parameters.AddWithValue("@email", email);
                 command.Parameters.AddWithValue("@password", password);
@@ -201,106 +188,101 @@ public class UserRepo : IUserRepo
     #region//Get Methods: retrieve unique user by email, id, password
     public User GetUser(string email)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
-        using(SqlConnection connection = new(AzureConnectionString))
+        using SqlConnection connection = new(AzureConnectionString);
+        string queryUserByEmail = "SELECT * FROM [dbo].[User] WHERE Email = @email";
+        SqlCommand command = new(queryUserByEmail, connection);
+        command.Parameters.AddWithValue("@Email", email);
+        try
         {
-            string queryUserByEmail = "SELECT * FROM User WHERE Email = @email";
-            SqlCommand command = new(queryUserByEmail, connection);
-            command.Parameters.AddWithValue("@Email", email);
-            try
+            connection.Open();
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                connection.Open();
-                using(SqlDataReader reader = command.ExecuteReader())
+                if (!reader.HasRows)
                 {
-                    if (!reader.HasRows)
-                    {
-                        return null!;
-                    }
-                    else
-                    {
-                        reader.Read();
-                        return new User(
-                            (int)reader[0],
-                            (int)reader[1],
-                            (string)reader[2],
-                            (string)reader[3]
-                        );
-                    }
+                    return null!;
                 }
-            } catch(Exception e) {
-                Console.WriteLine(e.Message);
-                return null!;
+                else
+                {
+                    reader.Read();
+                    return new User(
+                        (int)reader[0],
+                        (int)reader[1],
+                        (string)reader[2],
+                        (string)reader[3]
+                    );
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return null!;
         }
     }
 
     public User GetUser(int id)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
-        using(SqlConnection connection = new(AzureConnectionString))
+        using SqlConnection connection = new(AzureConnectionString);
+        string queryUserById = "SELECT * FROM [dbo].[User] WHERE Id = @id";
+        SqlCommand command = new(queryUserById, connection);
+        command.Parameters.AddWithValue("@id", id);
+        try
         {
-            string queryUserById = "SELECT * FROM User WHERE UserId = @id";
-            SqlCommand command = new(queryUserById, connection);
-            command.Parameters.AddWithValue("@id", id);
-            try
+            connection.Open();
+            using (SqlDataReader reader = command.ExecuteReader())
             {
-                connection.Open();
-                using(SqlDataReader reader = command.ExecuteReader())
+                if (!reader.HasRows)
                 {
-                    if (!reader.HasRows)
-                    {
-                        return null!;
-                    }
-                    else
-                    {
-                        reader.Read();
-                        return new User(
-                            (int)reader[0],
-                            (int)reader[1],
-                            (string)reader[2],
-                            (string)reader[3]
-                        );
-                    }
+                    return null!;
                 }
-            } catch(Exception e) {
-                Console.WriteLine(e.Message);
-                return null!;
+                else
+                {
+                    reader.Read();
+                    return new User(
+                        (int)reader[0],
+                        (int)reader[1],
+                        (string)reader[2],
+                        (string)reader[3]
+                    );
+                }
             }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return null!;
         }
     }
     public User LoginUser(string email, string password)
     {
-        string AzureConnectionString = File.ReadAllText("appsettings.Development.json");
-        using(SqlConnection connection = new(AzureConnectionString))
+        using SqlConnection connection = new(AzureConnectionString);
+        string queryUserByEmail = "SELECT * FROM [dbo].[User] WHERE Email = @email AND Password = @password";
+        SqlCommand command = new(queryUserByEmail, connection);
+        command.Parameters.AddWithValue("@Email", email);
+        command.Parameters.AddWithValue("@Password", password);
+        try
         {
-            string queryUserByEmail = "SELECT * FROM User WHERE Email = @email AND Password = @password";
-            SqlCommand command = new(queryUserByEmail, connection);
-            command.Parameters.AddWithValue("@Email", email);
-            command.Parameters.AddWithValue("@Password", password);
-            try
+            connection.Open();
+            using SqlDataReader reader = command.ExecuteReader();
+            if (!reader.HasRows)
             {
-                connection.Open();
-                using(SqlDataReader reader = command.ExecuteReader())
-                {
-                    if (!reader.HasRows)
-                    {
-                        return null!;
-                    }
-                    else
-                    {
-                        reader.Read();
-                        return new User(
-                            (int)reader[0],
-                            (int)reader[1],
-                            (string)reader[2],
-                            (string)reader[3]
-                        );
-                    }
-                }
-            } catch(Exception e) {
-                Console.WriteLine(e.Message);
                 return null!;
             }
+            else
+            {
+                reader.Read();
+                return new User(
+                    (int)reader[0],
+                    (int)reader[1],
+                    (string)reader[2],
+                    (string)reader[3]
+                );
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+            return null!;
         }
     }
     #endregion

@@ -14,9 +14,9 @@ public interface IUserServices
     public User RegisterUser(string email, string password, int roleid);
     public User LoginUser(string email, string password);
 
-    //public User EditUser(int id, string oldPassword, string newPassword);
-    //public User EditUser(int id, string email);
-    // public User EditUser(int managerId, int userId, int roleId);
+    public User EditUser(int id, string oldPassword, string newPassword);
+    public User EditUser(int id, string email);
+    public User EditUser(int managerId, int userId, int roleId);
 }
 
 public class UserServices : IUserServices
@@ -47,33 +47,36 @@ public class UserServices : IUserServices
     #endregion
 
     #region//Edit User Methods
-    // public User EditUser(int id, string oldPassword, string newPassword)
-    // {
-    //     if(!_ivs.IsEmployee(id) || !_ivs.VerifyPassword(newPassword) || !_ivs.IsPassword(id, oldPassword))
-    //     {
-    //         Console.WriteLine("Invalid userId, invalid new password, or passwords don't match");
-    //         return null!;
-    //     }
-    //     return _iur.UpdateUser(id, newPassword);
-    // }
-    // public User EditUser(int id, string email)
-    // {
-    //     if(!_ivs.IsEmployee(id) || !_ivs.VerifyEmail(email))
-    //     {
-    //         Console.WriteLine("Invalid userId, or invalid email");
-    //         return null!;
-    //     }
-    //     return _iur.UpdateUser(id, email);
-    // }
-    // public User EditUser(int managerId, int userId, int roleId)
-    // {
-    //     if(!_ivs.IsEmployee(id) || !_ivs.VerifyEmail(email))
-    //     {
-    //         Console.WriteLine("Invalid userId, or invalid email");
-    //         return null!;
-    //     }
-    //     return _iur.UpdateUser(id, email);
-    // }
+    public User EditUser(int id, string oldPassword, string newPassword)
+    {
+        if(!_ivs.IsEmployee(id) || !_ivs.VerifyPassword(newPassword) || !_ivs.IsPassword(id, oldPassword))
+        {
+            Console.WriteLine("Invalid userId, invalid new password, or passwords don't match");
+            return null!;
+        }
+        return _iur.UpdateUser(id, newPassword);
+    }
+    public User EditUser(int id, string email)
+    {
+        if(!_ivs.IsEmployee(id) || !_ivs.VerifyEmail(email))
+        {
+            Console.WriteLine("Invalid userId, or invalid email");
+            return null!;
+        }
+        return _iur.UpdateUser(id, email);
+    }
+    public User EditUser(int managerId, int employeeId, int roleId)
+    {
+        if(managerId == employeeId) return null!;
+        {
+            if(!_ivs.IsManager(managerId) || !_ivs.VerifyRole(roleId) || !_ivs.IsEmployee(employeeId))
+            {
+                Console.WriteLine("Invalid managerId, roleId, or employeeId.");
+                return null!;
+            }
+        }
+        return _iur.UpdateUser(employeeId, roleId);
+    }
 
     #endregion
 }
