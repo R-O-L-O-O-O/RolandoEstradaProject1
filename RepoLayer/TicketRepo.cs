@@ -24,7 +24,7 @@ public class TicketRepo : ITicketRepo
     public Ticket UpdateTicket(string ticketId, int statusId) {
         using(SqlConnection connection = new(AzureConnectionString))
         {
-            string updateTicketQuery = "UPDATE Ticket SET StatusId = @statusId WHERE TicketId = @ticketId";
+            string updateTicketQuery = "UPDATE [dbo].[Ticket] SET StatusId = @statusId WHERE TicketId = @ticketId";
             SqlCommand command = new(updateTicketQuery, connection);
             command.Parameters.AddWithValue("@statusId", statusId);
             command.Parameters.AddWithValue("@ticketId", ticketId);
@@ -46,7 +46,7 @@ public class TicketRepo : ITicketRepo
     public Ticket SubmitTicket(string guide, string reason, int amount, string description, int userId)
     {
         using(SqlConnection connection = new(AzureConnectionString)) {
-            string insertTicketQuery = "INSERT INTO Ticket (TicketId, Reason, Amount, Description, StatusId, EmployeeId) VALUES (@guid, @reason, @amount, @description, 0, @userId)";
+            string insertTicketQuery = "INSERT INTO [dbo].[Ticket] (TicketId, Reason, Amount, Description, StatusId, UserId) VALUES (@guide, @reason, @amount, @description, 0, @userId)";
             SqlCommand command = new(insertTicketQuery, connection);
             command.Parameters.AddWithValue("@guide", guide);
             command.Parameters.AddWithValue("@reason", reason);
@@ -72,7 +72,7 @@ public class TicketRepo : ITicketRepo
     public Ticket GetTicket(string ticketId)
     {
         using(SqlConnection connection = new(AzureConnectionString)) {
-            string queryTicketById = "SELECT * FROM Ticket WHERE TicketId = @ticketId";
+            string queryTicketById = "SELECT * FROM [dbo].[Ticket] WHERE TicketId = @ticketId";
             SqlCommand command = new(queryTicketById, connection);
             command.Parameters.AddWithValue("@ticketId", ticketId);
             try {
@@ -104,7 +104,7 @@ public class TicketRepo : ITicketRepo
     {
         List<Ticket> userTickets = new();
         using(SqlConnection connection = new(AzureConnectionString)) {
-            string queryAllUserTickets = "SELECT * FROM Ticket WHERE UserId = @userId;";
+            string queryAllUserTickets = "SELECT * FROM [dbo].[Ticket] WHERE UserId = @userId";
             SqlCommand command = new(queryAllUserTickets, connection);
             command.Parameters.AddWithValue("@userId", userId);
 
@@ -137,7 +137,7 @@ public class TicketRepo : ITicketRepo
     {
         List<Ticket> userTickets = new();
         using(SqlConnection connection = new(AzureConnectionString)) {
-            string queryAllUserTickets = "SELECT * FROM Ticket WHERE UserId = @userId AND StatusId = @statusId;";
+            string queryAllUserTickets = "SELECT * FROM [dbo].[Ticket] WHERE UserId = @userId AND StatusId = @statusId";
             SqlCommand command = new(queryAllUserTickets, connection);
             command.Parameters.AddWithValue("@userId", userId);
             command.Parameters.AddWithValue("@statusId", statusId);
@@ -173,7 +173,7 @@ public class TicketRepo : ITicketRepo
     {
         List<Ticket> userTickets = new();
         using(SqlConnection connection = new(AzureConnectionString)) {
-            string queryAllUserTickets = "SELECT * FROM Ticket WHERE StatusId = @statusId;";
+            string queryAllUserTickets = "SELECT * FROM [dbo].[Ticket] WHERE StatusId = @statusId";
             SqlCommand command = new(queryAllUserTickets, connection);
             command.Parameters.AddWithValue("@statusId", 0);
 

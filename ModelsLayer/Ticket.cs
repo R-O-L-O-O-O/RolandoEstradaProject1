@@ -7,7 +7,7 @@ namespace ModelsLayer;
 
 public class Ticket
 {
-    public string ?Guid { get; set; }
+    public string ?Guide { get; set; }
     public int UserId { get; set; }
     public string ?Reason { get; set; }
     public int Amount { get; set; }
@@ -16,9 +16,9 @@ public class Ticket
     //0 = pending, 1 = approved, 2 = rejected
     public int Status { get; set; }
 
-    public Ticket(string guid, string reason, int amount, string description, int statusId, int userId)
+    public Ticket(string guide, string reason, int amount, string description, int statusId, int userId)
     {
-        this.Guid = guid;
+        this.Guide = guide;
         this.Reason = reason;
         this.Amount = amount;
         this.Description = description;

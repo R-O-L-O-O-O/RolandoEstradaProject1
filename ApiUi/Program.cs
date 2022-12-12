@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<IUserServices, UserServices>();
         builder.Services.AddScoped<IUserRepo, UserRepo>();
+        builder.Services.AddScoped<ITicketService, TicketService>();
+        builder.Services.AddScoped<ITicketRepo, TicketRepo>();
 
         var app = builder.Build();
 
