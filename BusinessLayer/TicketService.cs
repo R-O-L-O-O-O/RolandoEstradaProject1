@@ -18,7 +18,6 @@ public interface ITicketService
 
 public class TicketService : ITicketService
 {
-    //Dependency Injection
     private readonly ITicketRepo _itr;
     private readonly IUserRepo _iur;
     private readonly IVerificationServices _ivs;

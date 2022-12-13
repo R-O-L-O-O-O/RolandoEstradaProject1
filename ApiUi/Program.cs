@@ -13,6 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddScoped<IUserRepo, UserRepo>();
         builder.Services.AddScoped<ITicketService, TicketService>();
         builder.Services.AddScoped<ITicketRepo, TicketRepo>();
+        builder.Services.AddSingleton<IMyLogger, MyLogger>();
 
         var app = builder.Build();
 
